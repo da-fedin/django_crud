@@ -1,0 +1,53 @@
+{% extends 'home.html' %}
+
+{% block title %}List{% endblock %}
+
+{% block content %}
+{#    {% if user.is_authenticated %}#}
+
+{#    {% endif %}#}
+    {% if user.is_authenticated %}
+        <h3>Contact data summary:</h3>
+        {% if data_type_amount %}
+            <br>
+            Amount of contact data types : {{ data_type_amount }}
+            <br>
+            <br>
+            Data type usage:
+                <ul>
+                    {% for use in usage %}
+                        <li>{{ use }}</li>
+                    {% endfor %}
+                </ul>
+            Count of contact data usage per user:
+            <br>
+            <ul>
+                {% for item in data_type_count %}
+                        <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            info data not sent!
+        {% endif %}
+        <h3>Contact List</h3>
+        {% if user.is_superuser %}
+            <ul>
+                {% for contact in contacts %}
+                    <br>
+                    <li>{{ contact.name }}</li>
+                    <br>
+                    <ul>
+                        {% for contact_data in contact.contactdata_set.all %}
+                            <li>{{ contact_data.data_type.name }}: {{ contact_data.value }}</li>
+                        {% endfor %}
+                    </ul>
+                    <br>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>{{ info_message }}</p>
+        {% endif %}
+    {% else %}
+        <p>{{ login_prompt }}</p>
+    {% endif %}
+{% endblock %}
